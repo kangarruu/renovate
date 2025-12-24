@@ -15,6 +15,15 @@ export function getCliName(option: ParseConfigOptions): string {
   return `--${nameWithHyphens.toLowerCase()}`;
 }
 
+export function getCliParamType(option: ParseConfigOptions): string {
+  let param = `<${option.type}>`;
+  if (option.type === 'array' && option.subType) {
+    param = `<array of ${option.subType}s>`;
+  }
+  param = param.replace('<boolean>', '[boolean]');
+  return param;
+}
+
 export function getConfig(input: string[]): AllConfig {
   // massage migrated configuration keys
   const argv = input
@@ -52,7 +61,7 @@ export function getConfig(input: string[]): AllConfig {
 
   options.forEach((option) => {
     if (option.cli !== false) {
-      const param = `<${option.type}>`.replace('<boolean>', '[boolean]');
+      const param = getCliParamType(option);
       const optionString = `${getCliName(option)} ${param}`;
       program = program.option(
         optionString,
