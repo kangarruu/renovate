@@ -27,6 +27,59 @@ describe('workers/global/config/parse/cli', () => {
     });
   });
 
+  describe('.getCliParamType(definition)', () => {
+    it('formats string type', () => {
+      const option: ParseConfigOptions = {
+        name: 'token',
+        type: 'string',
+      };
+      expect(cli.getCliParamType(option)).toBe('<string>');
+    });
+
+    it('formats boolean type with brackets', () => {
+      const option: ParseConfigOptions = {
+        name: 'enabled',
+        type: 'boolean',
+      };
+      expect(cli.getCliParamType(option)).toBe('[boolean]');
+    });
+
+    it('formats array without subType', () => {
+      const option: ParseConfigOptions = {
+        name: 'packageRules',
+        type: 'array',
+      };
+      expect(cli.getCliParamType(option)).toBe('<array>');
+    });
+
+    it('formats array of strings', () => {
+      const option: ParseConfigOptions = {
+        name: 'labels',
+        type: 'array',
+        subType: 'string',
+      };
+      expect(cli.getCliParamType(option)).toBe('<array of strings>');
+    });
+
+    it('formats array of objects', () => {
+      const option: ParseConfigOptions = {
+        name: 'hostRules',
+        type: 'array',
+        subType: 'object',
+      };
+      expect(cli.getCliParamType(option)).toBe('<array of objects>');
+    });
+
+    it('formats array of numbers', () => {
+      const option: ParseConfigOptions = {
+        name: 'httpStatusCodesToIgnore',
+        type: 'array',
+        subType: 'number',
+      };
+      expect(cli.getCliParamType(option)).toBe('<array of numbers>');
+    });
+  });
+
   describe('.getConfig(argv)', () => {
     it('returns empty argv', () => {
       expect(cli.getConfig(argv)).toEqual({});
